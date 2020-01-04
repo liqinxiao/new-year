@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="initial-scale=1, user-scalable=0, minimal-ui">
-
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.2.0/anime.min.js"></script>
   <title>新年快乐</title>
@@ -996,6 +995,10 @@
       </svg>              
     </div>
   </div>
+  
+  <audio style="display:none; height: 0" id="bg-music" preload="auto" src="28.mp3" loop="loop"></audio>
+
+  
 </body>
 <script>
   var design = anime({
@@ -1027,8 +1030,52 @@
     direction: 'alternate',
     loop: true
   })
-
+function audioAutoPlay(id){  
+    var audio = document.getElementById(id),  
+        play = function(){  
+            audio.play();  
+            document.removeEventListener("touchstart",play, false);  
+        };  
+    audio.play();  
+    document.addEventListener("WeixinJSBridgeReady", function () {  
+        play();  
+    }, false);  
+    document.addEventListener('YixinJSBridgeReady', function() {  
+        play();  
+    }, false);  
+    document.addEventListener("touchstart",play, false);  
+}  
+audioAutoPlay('Jaudio'); 
 
 </script>
+<script type="text/javascript">
+function autoPlayMusic() {
+    // 自动播放音乐效果，解决浏览器或者APP自动播放问题
+    function musicInBrowserHandler() {
+        musicPlay(true);
+        document.body.removeEventListener('touchstart', musicInBrowserHandler);
+    }
+    document.body.addEventListener('touchstart', musicInBrowserHandler);
 
+    // 自动播放音乐效果，解决微信自动播放问题
+    function musicInWeixinHandler() {
+        musicPlay(true);
+        document.addEventListener("WeixinJSBridgeReady", function () {
+            musicPlay(true);
+        }, false);
+        document.removeEventListener('DOMContentLoaded', musicInWeixinHandler);
+    }
+    document.addEventListener('DOMContentLoaded', musicInWeixinHandler);
+    }
+	    function musicPlay(isPlay) {
+	    var media = document.querySelector('#bg-music');
+	    if (isPlay && media.paused) {
+	        media.play();
+	    }
+	    if (!isPlay && !media.paused) {
+	        media.pause();
+	    }
+    }
+autoPlayMusic();
+</script>
 </html>
